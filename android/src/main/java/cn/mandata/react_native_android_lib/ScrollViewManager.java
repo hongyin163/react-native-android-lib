@@ -1,13 +1,6 @@
 package cn.mandata.react_native_android_lib;
 
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
@@ -22,7 +15,7 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
  * Created by Administrator on 2015/11/22.
  */
 public class ScrollViewManager extends ViewGroupManager<SwipeRefreshLayout> {
-    private static final String REACT_CLASS = "ScrollViewPullToRefresh";
+    private static final String REACT_CLASS = "SwipeRefreshLayout";
     @Override
     public String getName() {
         return REACT_CLASS;
