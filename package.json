@@ -1,0 +1,19 @@
+{
+  "name": "react-native-android-lib",
+  "version": "1.0.1",
+  "description": "react native android lib",
+  "main": "index.android.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hongyin163/react-native-android-lib.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hongyin163/react-native-android-lib/issues"
+  },
+  "homepage": "https://github.com/hongyin163/react-native-android-lib#readme"
+}
