@@ -53,118 +53,6 @@ public class UmengLogin {
         mShareAPI = UMShareAPI.get(comp);
     }
 
-    public static void Login(Activity comp,final View view, String target, final ReactContext reactContext) {
-
-        target = target.toUpperCase();
-        SHARE_MEDIA targetMedia = SHARE_MEDIA.valueOf(target);
-        final Activity activity = comp;
-        final Context appContext = activity.getApplicationContext();
-
-        mShareAPI.doOauthVerify(activity, targetMedia, new UMAuthListener() {
-            @Override
-            public void onComplete(SHARE_MEDIA platform, int i, Map<String, String> value) {
-
-                if (value == null) return;
-
-                Toast.makeText(appContext, "授权成功", Toast.LENGTH_SHORT).show();
-                String userId="";
-                if(value.containsKey("uid")){
-                    userId=value.get("uid");
-                }else if(value.containsKey("unionid")){
-                    userId=value.get("unionid");
-                }
-
-                final String uid =userId;
-
-                final String password = value.get("access_token");
-                android.util.Log.i("TestData", "uid" + uid);
-                android.util.Log.i("TestData", "access_token" + password);
-                SharedPreferences preferences = appContext.getSharedPreferences(
-                        "userlogin", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("uid", uid);
-                editor.putString("password", password);
-                editor.putString("source", platform.toString());
-                editor.commit();
-
-                mShareAPI.getPlatformInfo(activity, platform,
-                        new UMAuthListener() {
-                            @Override
-                            public void onComplete(SHARE_MEDIA platform, int i, Map<String, String> info) {
-
-                                String screen_name = "", profile_image_url = "", gender = "";
-                                switch (platform) {
-                                    case SINA:
-                                    case QQ:
-                                        screen_name = info.get("screen_name") + "";
-                                        profile_image_url = info.get("profile_image_url") + "";
-                                        gender = info.get("gender") + "";
-                                        break;
-                                    case WEIXIN:
-                                        screen_name = info.get("nickname") + "";
-                                        profile_image_url = info.get("headimgurl") + "";
-                                        gender = info.get("sex") + "";
-                                        break;
-                                    default:
-                                        break;
-                                }
-
-                                SharedPreferences preferences0 = appContext.getSharedPreferences("userlogin", Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor0 = preferences0.edit();
-                                editor0.putString("username", screen_name);
-                                editor0.putString("profile_image_url", profile_image_url);
-                                if (gender.equals("1") || gender.equals("男")) {
-                                    editor0.putString("gender", "男");
-                                } else {
-                                    editor0.putString("gender", "女");
-                                }
-                                editor0.commit();
-
-                                WritableMap data= Arguments.createMap();
-                                try {
-                                    data.putString("id", uid);
-                                    data.putString("username", screen_name);
-                                    data.putString("password", password);
-                                    data.putString("sso", platform.toString());
-
-                                    reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
-                                            view.getId(),
-                                            "topChange",
-                                            data);
-
-                                } catch(Exception ex) {
-                                    // TODO Auto-generated catch
-                                    // block
-                                    ex.printStackTrace();
-                                }
-                            }
-
-                            @Override
-                            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
-                                Toast.makeText(appContext, "获取信息失败", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onCancel(SHARE_MEDIA share_media, int i) {
-
-                            }
-
-                        });
-
-            }
-
-            @Override
-            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
-                Toast.makeText(appContext, "授权失败", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancel(SHARE_MEDIA share_media, int i) {
-
-            }
-        });
-    }
-
     public static void Login(Activity comp, String target, final Callback callback) {
 
         target = target.toUpperCase();
@@ -225,11 +113,13 @@ public class UmengLogin {
                                 SharedPreferences.Editor editor0 = preferences0.edit();
                                 editor0.putString("username", screen_name);
                                 editor0.putString("profile_image_url", profile_image_url);
+                                String genderText="";
                                 if (gender.equals("1") || gender.equals("男")) {
-                                    editor0.putString("gender", "男");
+                                    genderText="男";
                                 } else {
-                                    editor0.putString("gender", "女");
+                                    genderText="女";
                                 }
+                                editor0.putString("gender", genderText);
                                 editor0.commit();
 
                                 WritableMap data= Arguments.createMap();
@@ -238,6 +128,8 @@ public class UmengLogin {
                                     data.putString("username", screen_name);
                                     data.putString("password", password);
                                     data.putString("sso", platform.toString());
+                                    data.putString("gender", genderText);
+                                    data.putString("image_url",profile_image_url);
                                     callback.invoke(data);
 
                                 } catch(Exception ex) {
@@ -283,10 +175,15 @@ public class UmengLogin {
             String id=refer.getString("id","");
             String username = refer.getString("username", "");
             String pwd=refer.getString("password","");
+            String image_url=refer.getString("profile_image_url","");
+            String gender=refer.getString("gender","");
+
             WritableMap v= Arguments.createMap();
             v.putString("id",id);
             v.putString("username",username);
             v.putString("password",pwd);
+            v.putString("image_url",image_url);
+            v.putString("gender",gender);
             callback.invoke(true,v);
         }
     }

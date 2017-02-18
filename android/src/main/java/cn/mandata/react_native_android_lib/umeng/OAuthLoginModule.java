@@ -2,9 +2,12 @@ package cn.mandata.react_native_android_lib.umeng;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import com.facebook.react.ReactRootView;
+import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -16,6 +19,7 @@ import com.facebook.react.uimanager.RootViewUtil;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.views.view.ReactViewGroup;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
 
 import java.util.Map;
@@ -34,10 +38,18 @@ public class OAuthLoginModule extends ReactContextBaseJavaModule implements Runn
     private Callback successCallback;
     private Callback errorCallback;
     private UMShareAPI mShareAPI;
-
+    private  final Activity currentActivity;
     public OAuthLoginModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext=reactContext;
+        currentActivity=this.getCurrentActivity();
+
+        reactContext.addActivityEventListener(new ActivityEventListener() {
+            @Override
+            public void onActivityResult(int requestCode, int resultCode, Intent data) {
+                UmengLogin.onActivityResult(requestCode, resultCode, data);
+            }
+        });
     }
 
     @Override

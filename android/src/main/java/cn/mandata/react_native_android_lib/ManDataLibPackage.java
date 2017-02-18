@@ -12,7 +12,6 @@ import java.util.List;
 
 import cn.mandata.react_native_android_lib.toolbar.ManToolbarManager;
 import cn.mandata.react_native_android_lib.umeng.AnalyticsModule;
-import cn.mandata.react_native_android_lib.umeng.LoginModule;
 import cn.mandata.react_native_android_lib.umeng.OAuthLoginModule;
 import cn.mandata.react_native_android_lib.util.DevUtilModule;
 

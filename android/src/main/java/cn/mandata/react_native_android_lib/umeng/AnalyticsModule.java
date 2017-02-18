@@ -22,32 +22,32 @@ public class AnalyticsModule extends ReactContextBaseJavaModule {
         super(reactContext);
         appContext=reactContext;
         currentActivity=this.getCurrentActivity();
+        MobclickAgent.setScenarioType(appContext, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        appContext.addLifecycleEventListener(new LifecycleEventListener() {
+            @Override
+            public void onHostResume() {
+                MobclickAgent.onResume(currentActivity);
+            }
 
-//        appContext.addLifecycleEventListener(new LifecycleEventListener() {
-//            @Override
-//            public void onHostResume() {
-//                MobclickAgent.onResume(currentActivity);
-//            }
-//
-//            @Override
-//            public void onHostPause() {
-//                MobclickAgent.onPause(currentActivity);
-//            }
-//
-//            @Override
-//            public void onHostDestroy() {
-//
-//            }
-//        });
+            @Override
+            public void onHostPause() {
+                MobclickAgent.onPause(currentActivity);
+            }
+
+            @Override
+            public void onHostDestroy() {
+
+            }
+        });
     }
-    @ReactMethod
-    public void setAppkey(String appKey){
-        AnalyticsConfig.setAppkey(currentActivity,appKey);
-    }
-    @ReactMethod
-    public void setChannel(String channel){
-        AnalyticsConfig.setChannel(channel);
-    }
+//    @ReactMethod
+//    public void setAppkey(String appKey){
+//        AnalyticsConfig.setAppkey(currentActivity,appKey);
+//    }
+//    @ReactMethod
+//    public void setChannel(String channel){
+//        AnalyticsConfig.setChannel(channel);
+//    }
 
     @ReactMethod
     public  void  onPageStart(String pageName){
